@@ -12,9 +12,9 @@ http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartpho
 https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
 2. Execute run_analysis.R script
 3. Outputs are
-* Merged data set table called DTOne 
-* Extracted DTMeansStds table
-* Tidy DTTidy table
+** Merged data set table called DTOne 
+** Extracted DTMeansStds table
+** Tidy DTTidy table
 
 ## Data
 DTOne variables are documented in the CodeBook.md
