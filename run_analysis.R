@@ -1,6 +1,10 @@
 #Source utility file
 source("label_decoders.R")
 
+
+#Output file
+
+outFile="tidydata.txt"
 #Set path for test,training data sets and feature description file
 
 testFile<-"./UCI\ HAR\ Dataset/test/X_test.txt"
@@ -94,6 +98,9 @@ for (activity in  unique(DTOne$ActivityName)) {
   }
 }
   
+
+#Write to file
+write.table(DTTidy,outFile,sep=" ")
 
 
 
