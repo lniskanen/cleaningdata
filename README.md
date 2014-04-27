@@ -19,6 +19,9 @@ https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Datas
 2. Extracted DTMeansStds table
 3. Tidy DTTidy table
 
+### Output data file
+* tidydata.txt - DTTidy data structure
+
 ## Data
 Data variables are documented in the   [CodeBook.md](/CodeBook.md/)
 
