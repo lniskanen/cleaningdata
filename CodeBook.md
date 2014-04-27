@@ -23,5 +23,9 @@ variable value and mapping to name as in /UCI HAR Dataset/activity_labels.txt
 * 1..46 "mean" columns from the merged data set DTOne
 * 47..79 "std" columns from the merged data set DTOne
 
-
+## DTTidy variables
+* ActivityName
+* Subject
+* Activity
+* 4...564 means for given activity and subject
 
