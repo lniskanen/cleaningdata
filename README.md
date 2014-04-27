@@ -20,7 +20,7 @@ https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Datas
 3. Tidy DTTidy table
 
 ## Data
-Data variables are documented in the   [CodeBook.md]
+Data variables are documented in the   [CodeBook.md](/CodeBook.md/)
 
 
  
