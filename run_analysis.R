@@ -80,6 +80,7 @@ DTTidy=data.frame()
 ## Get test subject id list
 Subjects=sort(unique(DTOne$Subject))
 
+
 for (activity in  unique(DTOne$ActivityName)) {
   for (subject in Subjects){
     #Get subset table with given activity and subject values
@@ -99,4 +100,4 @@ for (activity in  unique(DTOne$ActivityName)) {
 #Clean up some temporary data structures to save memory
 remove(DTFeatures, featureNames,DTTest, DTTrain, DTTestActivity, DTTestSubject)
 remove(DTTrainActivity,DTTrainSubject,ASTable,ColMeans,Subjects)
-remove(SubT,ActivityName,activity,meandInd,stdInd,subject)
+remove(SubT,ActivityName,activity,meanInd,stdInd,subject)
