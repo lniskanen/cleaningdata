@@ -1,4 +1,5 @@
-# This project merges and tidies data collected by the projec
+#Short intro 
+This project merges and tidies data collected by the project
 
 http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
 
