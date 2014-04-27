@@ -4,7 +4,7 @@ http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartpho
 
 ##Included files
 * run_analysis.R   - main function to merge and clean data set
-* label_decoders.R - utility function for decoding values to labes
+* label_decoders.R - utility functions such as for decoding values to lables etc.
 
 ## Usage
 
