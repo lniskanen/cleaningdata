@@ -1,110 +1,104 @@
-#Source utility file
+## Source utility file
 source("label_decoders.R")
 
+## Set path variables
+sourceTestDirPath<-"./UCI\ HAR\ Dataset/test/"
+sourceTrainDirPath<-"./UCI\ HAR\ Dataset/train/"
 
-#Output file
+## Set path for test,training data sets and feature description file
 
-outFile="tidydata.txt"
-#Set path for test,training data sets and feature description file
-
-testFile<-"./UCI\ HAR\ Dataset/test/X_test.txt"
-testSubjectFile<-"./UCI\ HAR\ Dataset/test/subject_test.txt"
-testActivityFile<-"./UCI\ HAR\ Dataset/test/y_test.txt"
-trainFile="./UCI\ HAR\ Dataset/train/X_train.txt"
-trainSubjectFile<-"./UCI\ HAR\ Dataset/train/subject_train.txt"
-trainActivityFile<-"./UCI\ HAR\ Dataset/train/y_train.txt"
+testFile<-paste0(sourceTestDirPath,"X_test.txt")
+testSubjectFile<-paste0(sourceTestDirPath,"subject_test.txt")
+testActivityFile<-paste0(sourceTestDirPath,"y_test.txt")
+trainFile=paste0(sourceTrainDirPath,"X_train.txt")
+trainSubjectFile<-paste0(sourceTrainDirPath,"subject_train.txt")
+trainActivityFile<-paste0(sourceTrainDirPath,"y_train.txt")
 featuresFile<-"./UCI\ HAR\ Dataset/features.txt"
 
+## Output file
 
-#Read test data set
-DTTest<-read.table(testFile,sep="")
-
-#Read train data set
-DTTrain<-read.table(trainFile,sep="")
-
-#Check the table dimensions
-#dim(DTTest)
-#dim(DTTrain)
-
-#Combine both to one data set
-DTOne<-rbind(DTTest,DTTrain)
-
-#Read feature names from description file
-DTFeatures<-read.table(featuresFile,sep="")
-featureNames<-DTFeatures[,2]
-
-#Insert feature names as variable names into the table
-names(DTOne)<-featureNames
-
-#Get std measurements columns
-stdInd<-grep("std",featureNames)
-#length(stdInd)
-#featureNames[stdInd]
-
-#Get mean measurements columns
-meanInd<-grep("mean",featureNames)
-#length(meanInd)
-#featureNames[meanInd]
-
-#Create output table for means and standar deviations
-DTMeansStds<-cbind(DTOne[,meanInd],DTOne[,stdInd])
-
-#Read test activity and subject data
-DTTestActivity<-read.table(testActivityFile,sep="")
-DTTestSubject<-read.table(testSubjectFile,sep="")
-
-#Read train activity and subject data
-DTTrainActivity<-read.table(trainActivityFile,sep="")
-DTTrainSubject<-read.table(trainSubjectFile,sep="")
-
-#Bind Activity and Subject variables to the data table
-DTOne<-cbind(rbind(DTTestActivity,DTTrainActivity),DTOne)
-DTOne<-cbind(rbind(DTTestSubject,DTTrainSubject),DTOne)
-
-#Add new feature variable names into vector
+outFile="tidydata.txt"
 
 
-names(DTOne)[1]<-paste("Subject")
-names(DTOne)[2]<-paste("Activity")
+## Read test data set
+testDF<-read.table(testFile,sep="")
+
+##Read train data set
+trainDF<-read.table(trainFile,sep="")
+
+
+## Combine both to one output data set
+mergedDataSet<-rbind(testDF,trainDF)
+
+
+## Read feature names from description file
+featureDF<-read.table(featuresFile,sep="")
+featureNameList<-featureDF[,2]
+
+## Insert feature names as variable names into the table
+names(mergedDataSet)<-featureNameList
+
+## Get std measurements columns
+stdInd<-grep("std",featureNameList)
+## Get mean measurements columns
+meanInd<-grep("mean",featureNameList)
+
+## Create output table for means and standard deviations for one output table
+meansStdsTable<-cbind(mergedDataSet[,meanInd],mergedDataSet[,stdInd])
+
+
+## Read test and training activity and subject data
+testActivityDF<-read.table(testActivityFile,sep="")
+testSubjectDF<-read.table(testSubjectFile,sep="")
+trainActivityDF<-read.table(trainActivityFile,sep="")
+trainSubjectDF<-read.table(trainSubjectFile,sep="")
+
+## Bind Activity and Subject variables to the data table
+mergedDataSet<-cbind(rbind(testActivityDF,trainActivityDF),mergedDataSet)
+mergedDataSet<-cbind(rbind(testSubjectDF,trainSubjectDF),mergedDataSet)
+
+## Add new feature variable names into vector
+names(mergedDataSet)[1]<-paste("Subject")
+names(mergedDataSet)[2]<-paste("Activity")
+
+
+## Create list of human readable activity names for each row
+activityNameList<-lapply(mergedDataSet[,"Activity"],getActivityName)
+mergedDataSet<-cbind(data.frame(unlist(activityNameList)),mergedDataSet)
+
+## Change the feautre variable name
+names(mergedDataSet)[1]<-paste("ActivityName")
 
 
 
-
-#Create list of human readable activity names for each row
-ActivityName<-lapply(DTOne[,"Activity"],getActivityName)
-DTOne<-cbind(data.frame(unlist(ActivityName)),DTOne)
-
-#Change the variable name
-names(DTOne)[1]<-paste("ActivityName")
+## Split by ActivityName and Subject factors. The result is huge list but short code :-)
+SplittedByFactors<-split(mergedDataSet, list(mergedDataSet$ActivityName,mergedDataSet$Subject))
 
 
-#Iterate Activities and Subjects
-DTTidy=data.frame()
+## Output data frame
+tidyTB <-data.frame()
 
-## Get test subject id list
-Subjects=sort(unique(DTOne$Subject))
-
-
-for (activity in  unique(DTOne$ActivityName)) {
-  for (subject in Subjects){
-    #Get subset table with given activity and subject values
-    SubT<-subset(DTOne,ActivityName==activity & Subject==subject)
-    #Calculate column mean for the subtable
-    ColMeans<-colMeans(SubT[,4:ncol(SubT)])
-    #Assemble table with ActivityName,Subject,Activity and means
-    ASTable<-cbind(SubT[1,1:3],data.frame(t(ColMeans)))
-    #Row bind to output table
-    DTTidy<-rbind(DTTidy,ASTable)
-  }
+## Loop thorugh all factored cases, calculate column mean and store to output data frame
+for(case in SplittedByFactors){
+  cMeans<-t(colMeans(case[,4:ncol(case)]))
+  tmpTB<-cbind(ActivityName=case[1,1],Subject=case[1,2],Activity=case[1,3],data.frame(cMeans))
+  tidyTB <-rbind(tidyTB ,tmpTB)
 }
-  
-
-#Write to file
-write.table(DTTidy,outFile,sep=" ")
 
 
 
-#Clean up some temporary data structures to save memory
-remove(DTFeatures, featureNames,DTTest, DTTrain, DTTestActivity, DTTestSubject)
-remove(DTTrainActivity,DTTrainSubject,ASTable,ColMeans,Subjects)
-remove(SubT,ActivityName,activity,meanInd,stdInd,subject)
+## Write tidyTB to file
+if(file.exists(outFile)) file.remove(outFile)
+write.table(tidyTB ,outFile,sep=" ")
+
+
+## Clean up some temporary data structures to save memory and to clean output 
+remove(featureDF)
+remove(featureNameList,activityNameList)
+remove(trainActivityDF,trainSubjectDF)
+remove(case,cMeans,testDF,tmpTB,trainDF)
+remove(SplittedByFactors,meanInd,stdInd)
+remove(featuresFile,outFile,sourceTestDirPath,sourceTrainDirPath)
+remove(testActivityFile,testFile,testSubjectFile,trainActivityFile)
+remove(trainFile,trainSubjectFile)
+remove(testActivityDF,testSubjectDF)
