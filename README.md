@@ -20,7 +20,7 @@ https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Datas
 3. tidyTB       - tidy data frame is returned 
 
 ### Output data file
-* tidydata.txt - output file including tidyTB data structure
+* tidydata.txt - output file including tidyTB data structure with tab delimited fields
 
 ## Data
 Data variables are documented in the   [CodeBook.md](/CodeBook.md/)

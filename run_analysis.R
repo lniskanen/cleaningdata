@@ -89,7 +89,7 @@ for(case in SplittedByFactors){
 
 ## Write tidyTB to file
 if(file.exists(outFile)) file.remove(outFile)
-write.table(tidyTB ,outFile,sep=" ")
+write.table(tidyTB ,outFile,sep="\t")
 
 
 ## Clean up some temporary data structures to save memory and to clean output 
